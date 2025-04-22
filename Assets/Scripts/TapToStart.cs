@@ -11,13 +11,18 @@ public class TapToStart : MonoBehaviour
     private void OnEnable()
     {
         signalBus.Subscribe<GameStartedEvent>(StartGame);
-
-        canvasGroup.DOFade(1, 1f);
+        signalBus.Subscribe<LevelInitializedEvent>(LevelInitialized);
     }
 
     private void OnDisable()
     {
         signalBus.Unsubscribe<GameStartedEvent>(StartGame);
+        signalBus.Unsubscribe<LevelInitializedEvent>(LevelInitialized);
+    }
+
+    private void LevelInitialized()
+    {
+        canvasGroup.DOFade(1, 1f);
     }
 
     private void StartGame()

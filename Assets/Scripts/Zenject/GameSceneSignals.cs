@@ -5,6 +5,10 @@ namespace Injection
     {
     }
 
+    public class LevelInitializedEvent
+    {
+    }
+
     public class GameStartedEvent
     {
     }
@@ -15,6 +19,11 @@ namespace Injection
 
     public class GameSuccessEvent
     {
+    }
+
+    public class StopMovingPlatformEvent
+    {
+        
     }
 
     public class PerfectPlacementEvent

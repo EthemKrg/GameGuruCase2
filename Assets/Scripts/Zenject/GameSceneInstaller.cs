@@ -8,7 +8,8 @@ namespace Injection
         [SerializeField] private InputController inputController;
         [SerializeField] private CharacterMovementController characterMovementController;
         [SerializeField] private ObjectPool objectPool;
-        [SerializeField] private PlatformController platformController;
+        [SerializeField] private PlatformSpawner platformController;
+        [SerializeField] private PlatformPlacer platformPlacer;
         [SerializeField] private GameController gameController;
 
         public override void InstallBindings()
@@ -21,14 +22,16 @@ namespace Injection
             Container.DeclareSignal<GameSuccessEvent>();
             Container.DeclareSignal<PerfectPlacementEvent>();
             Container.DeclareSignal<NormalPlacementEvent>();
+            Container.DeclareSignal<StopMovingPlatformEvent>();
 
 
             //Bindings
             Container.Bind<InputController>().FromInstance(inputController).AsSingle();
             Container.Bind<CharacterMovementController>().FromInstance(characterMovementController).AsSingle();
             Container.Bind<ObjectPool>().FromInstance(objectPool).AsSingle();
-            Container.Bind<PlatformController>().FromInstance(platformController).AsSingle();
+            Container.Bind<PlatformSpawner>().FromInstance(platformController).AsSingle();
             Container.Bind<GameController>().FromInstance(gameController).AsSingle();
+            Container.Bind<PlatformPlacer>().FromInstance(platformPlacer).AsSingle();
         }
     }
 }

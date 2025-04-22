@@ -17,49 +17,56 @@ public class PlatformSpawner : MonoBehaviour
     [SerializeField] private Vector3 platformSize = new Vector3(3f, 0.6f, 3f);
 
     [SerializeField] private Vector3 nextPlatformPosition = Vector3.zero;
+    
+    private GameObject previousPlatform;
+    public GameObject PreviousPlatform => previousPlatform;
 
     private GameObject currentPlatform;
     public GameObject CurrentPlatform => currentPlatform;
 
+
     private void OnEnable()
     {
-        signalBus.Subscribe<PerfectPlacementEvent>(IncreasePlatformSpeedAndSpawnNew);
-        signalBus.Subscribe<NormalPlacementEvent>(ResetPlatformSpeedAndSpawnNew);
+        signalBus.Subscribe<LevelInitializedEvent>(StartLevel);
     }
 
     private void OnDisable()
     {
-        signalBus.Unsubscribe<PerfectPlacementEvent>(IncreasePlatformSpeedAndSpawnNew);
-        signalBus.Unsubscribe<NormalPlacementEvent>(ResetPlatformSpeedAndSpawnNew);
+        signalBus.Unsubscribe<LevelInitializedEvent>(StartLevel);
     }
 
-    private void Start()
+    private void StartLevel()
     {
         basePlatformSpeed = platformSpeed;
 
-        SpawnPlatformAtPoint(nextPlatformPosition);
-        IncrementNextPosition();
+        previousPlatform = SpawnPlatformAtPoint(nextPlatformPosition);
 
         SpawnAndMovePlatform();
     }
 
     private void SpawnAndMovePlatform()
     {
-        GameObject platform = objectPool.GetObject(ObjectPool.ObjectType.Platform);
+        previousPlatform = currentPlatform;
 
-        platform.transform.localPosition = nextPlatformPosition;
+        currentPlatform = objectPool.GetObject(ObjectPool.ObjectType.Platform);
+
+        currentPlatform.transform.localPosition = nextPlatformPosition;
 
         float targetXpos = nextPlatformPosition.x * -1f;
-        platform.transform.DOLocalMoveX(targetXpos, platformSpeed).SetLoops(-1, LoopType.Yoyo).SetEase(Ease.Linear);
+        currentPlatform.transform.DOLocalMoveX(targetXpos, platformSpeed).SetLoops(-1, LoopType.Yoyo).SetEase(Ease.Linear);
 
         IncrementNextPosition();
     }
 
-    private void SpawnPlatformAtPoint(Vector3 point)
+    private GameObject SpawnPlatformAtPoint(Vector3 point)
     {
-        GameObject platform = objectPool.GetObject(ObjectPool.ObjectType.Platform);
-        platform.transform.position = point;
-        platform.SetActive(true);
+        currentPlatform = objectPool.GetObject(ObjectPool.ObjectType.Platform);
+        currentPlatform.transform.position = point;
+        currentPlatform.SetActive(true);
+
+        IncrementNextPosition();
+
+        return currentPlatform;
     }
 
     private void IncrementNextPosition()
@@ -69,14 +76,14 @@ public class PlatformSpawner : MonoBehaviour
         nextPlatformPosition += new Vector3(spawnXpos, 0, platformSize.z);
     }
 
-    private void ResetPlatformSpeedAndSpawnNew()
+    public void ResetPlatformSpeedAndSpawnNew()
     {
         platformSpeed = basePlatformSpeed;
 
         SpawnAndMovePlatform();
     }
 
-    private void IncreasePlatformSpeedAndSpawnNew()
+    public void IncreasePlatformSpeedAndSpawnNew()
     {
         platformSpeed -= platformSpeedModifier;
 

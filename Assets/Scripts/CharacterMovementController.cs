@@ -34,14 +34,16 @@ public class CharacterMovementController : MonoBehaviour
     private void OnEnable()
     {
         signalBus.Subscribe<GameStartedEvent>(() => CanMove = true);
+        signalBus.Subscribe<LevelInitializedEvent>(StartLevel);
     }
 
     private void OnDisable()
     {
         signalBus.TryUnsubscribe<GameStartedEvent>(() => CanMove = false);
+        signalBus.TryUnsubscribe<LevelInitializedEvent>(StartLevel);
     }
 
-    private void Start()
+    private void StartLevel()
     {
         CanMove = false; // Initialize canMove to false
     }

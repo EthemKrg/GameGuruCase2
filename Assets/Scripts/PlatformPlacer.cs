@@ -12,6 +12,7 @@ public class PlatformPlacer : MonoBehaviour
     [Inject] private PlatformSpawner platformSpawner;
     [Inject] private ObjectPool objectPool;
     [Inject] private CharacterMovementController characterMovementController;
+    [Inject] private FinishController finishController;
 
     [SerializeField] private float perfectPlacementTolerance = 0.1f; // Tolerance for determining perfect placement
 
@@ -141,5 +142,7 @@ public class PlatformPlacer : MonoBehaviour
 
         // Update the player's x position to match the new platform position
         characterMovementController.MoveToXPos(newXPos);
+        // Update the finish controller's x position to match the new platform position
+        finishController.MoveToXPos(newXPos);
     }
 }

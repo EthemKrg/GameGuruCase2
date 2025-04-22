@@ -10,6 +10,7 @@ public class PlatformSpawner : MonoBehaviour
 {
     [Inject] private SignalBus signalBus;
     [Inject] private ObjectPool objectPool;
+    [Inject] private FinishController finishController;
 
     private float basePlatformSpeed; // The initial speed of the platform movement
     [SerializeField] private float platformSpeed = 3f; // Current speed of the platform movement
@@ -17,15 +18,20 @@ public class PlatformSpawner : MonoBehaviour
     [SerializeField] private float platformSpeedModifier = 0.1f; // Speed reduction modifier for perfect placements
 
     [SerializeField] private int spawnXpos = 5; // X position for spawning platforms
+
     [SerializeField] private Vector3 platformSize = new Vector3(3f, 0.6f, 3f); // Size of the platform
+    public Vector3 PlatformSize => platformSize; // Public getter for the platform size
 
     [SerializeField] private Vector3 nextPlatformPosition = Vector3.zero; // Position for the next platform to spawn
+    public Vector3 NextPlatformPosition => nextPlatformPosition; // Public getter for the next platform position
 
     private GameObject previousPlatform; // Reference to the last spawned platform
     public GameObject PreviousPlatform => previousPlatform; // Public getter for the previous platform
 
     private GameObject currentPlatform; // Reference to the currently moving platform
     public GameObject CurrentPlatform => currentPlatform; // Public getter for the current platform
+
+    private int spawnCount = 0; // Counter for the number of platforms will be spawned
 
     private void OnEnable()
     {
@@ -47,6 +53,7 @@ public class PlatformSpawner : MonoBehaviour
     private void StartLevel()
     {
         basePlatformSpeed = platformSpeed;
+        spawnCount = finishController.PlatformDistanceToFinish; // Set the spawn count based on the distance to the finish line
 
         previousPlatform = SpawnPlatformAtPoint(nextPlatformPosition);
         SpawnAndMovePlatform();
@@ -57,6 +64,12 @@ public class PlatformSpawner : MonoBehaviour
     /// </summary>
     private void SpawnAndMovePlatform()
     {
+        if (spawnCount <= 0)
+        {
+            return;
+        }
+        spawnCount--;
+
         previousPlatform = currentPlatform;
 
         currentPlatform = objectPool.GetObject(ObjectPool.ObjectType.Platform);
@@ -80,6 +93,12 @@ public class PlatformSpawner : MonoBehaviour
     /// <returns>The spawned platform.</returns>
     private GameObject SpawnPlatformAtPoint(Vector3 point)
     {
+        if (spawnCount <= 0)
+        {
+            return null;
+        }
+        spawnCount--;
+
         currentPlatform = objectPool.GetObject(ObjectPool.ObjectType.Platform);
         currentPlatform.transform.position = point;
         currentPlatform.SetActive(true);

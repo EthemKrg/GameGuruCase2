@@ -61,6 +61,7 @@ public class PlatformSpawner : MonoBehaviour
 
         currentPlatform = objectPool.GetObject(ObjectPool.ObjectType.Platform);
         currentPlatform.transform.DOKill(); // Stop any ongoing animations on the platform
+        currentPlatform.transform.localEulerAngles = Vector3.zero; // Reset rotation
         currentPlatform.transform.localScale = previousPlatform.transform.localScale; // Match the scale of the previous platform
         currentPlatform.transform.localPosition = nextPlatformPosition;
 

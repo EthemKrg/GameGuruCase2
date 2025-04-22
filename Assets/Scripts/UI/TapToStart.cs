@@ -27,6 +27,11 @@ public class TapToStart : MonoBehaviour
 
     private void StartGame()
     {
-        canvasGroup.DOFade(0, 1f);
+        canvasGroup.DOFade(0, 1f)
+            .OnComplete(() =>
+            {
+                canvasGroup.interactable = false;
+                canvasGroup.blocksRaycasts = false;
+            });
     }
 }

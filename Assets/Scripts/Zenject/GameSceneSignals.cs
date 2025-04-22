@@ -3,8 +3,7 @@ using UnityEngine;
 
 namespace Injection
 {
-   //public class DragEvent
-   //{
-   //   public DraggableParent draggableParent;
-   //}
+    public class TapEvent
+    {
+    }
 }

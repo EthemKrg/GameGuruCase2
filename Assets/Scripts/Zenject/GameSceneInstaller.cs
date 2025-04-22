@@ -5,16 +5,18 @@ namespace Injection
 {
     public class GameSceneInstaller : MonoInstaller<GameSceneInstaller>
     {
-        //[SerializeField] private WallsController wallsController;
+        [SerializeField] private InputController inputController;
+        [SerializeField] private CharacterMovementController characterMovementController;
 
         public override void InstallBindings()
         {
             //Signals
             SignalBusInstaller.Install(Container);
-            //Container.DeclareSignal<DragEvent>();
+            Container.DeclareSignal<TapEvent>();
 
             //Bindings
-            //Container.Bind<ColorData>().FromInstance(colorData).AsSingle();
+            Container.Bind<InputController>().FromInstance(inputController).AsSingle();
+            Container.Bind<CharacterMovementController>().FromInstance(characterMovementController).AsSingle();
         }
     }
 }

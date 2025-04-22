@@ -1,7 +1,11 @@
+using Injection;
 using UnityEngine;
+using Zenject;
 
 public class CharacterMovementController : MonoBehaviour
 {
+    [Inject] private SignalBus signalBus;
+
     // Speed of the player movement
     public float speed = 5f;
 
@@ -25,6 +29,16 @@ public class CharacterMovementController : MonoBehaviour
                 animator.SetTrigger("run");
             }
         }
+    }
+
+    private void OnEnable()
+    {
+        signalBus.Subscribe<GameStartedEvent>(() => CanMove = true);
+    }
+
+    private void OnDisable()
+    {
+        signalBus.TryUnsubscribe<GameStartedEvent>(() => CanMove = false);
     }
 
     private void Start()

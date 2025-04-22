@@ -1,9 +1,11 @@
-using System.Collections;
-using System.Collections.Generic;
+using Injection;
 using UnityEngine;
+using Zenject;
 
 public class InputController : MonoBehaviour
 {
+    [Inject] private SignalBus signalBus;   
+
     /// <summary>
     /// This method detects mouse clicks and touch inputs.
     /// </summary>
@@ -31,8 +33,6 @@ public class InputController : MonoBehaviour
     /// </summary>
     private void HandleInput()
     {
-        Debug.Log("Tap");
-
-        // Perform any action based on the position
+        signalBus.Fire(new TapEvent());
     }
 }

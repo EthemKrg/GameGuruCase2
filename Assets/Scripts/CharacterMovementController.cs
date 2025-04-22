@@ -41,17 +41,28 @@ public class CharacterMovementController : MonoBehaviour
     {
         signalBus.Subscribe<GameStartedEvent>(() => CanMove = true); // Start movement when the game starts
         signalBus.Subscribe<LevelInitializedEvent>(StartLevel); // Initialize the level
+        signalBus.Subscribe<GameOverEvent>(GameOver); // Stop movement when game over
     }
 
     private void OnDisable()
     {
         signalBus.TryUnsubscribe<GameStartedEvent>(() => CanMove = false); // Stop movement when the game ends
         signalBus.TryUnsubscribe<LevelInitializedEvent>(StartLevel); // Unsubscribe from level initialization
+        signalBus.TryUnsubscribe<GameOverEvent>(GameOver); // Unsubscribe from game over event
     }
 
     private void StartLevel()
     {
         CanMove = false; // Disable movement at the start of the level
+
+        // Check fail condition every second
+        InvokeRepeating(nameof(CheckFailCondition), 1f, 0.5f);
+    }
+
+    private void GameOver()
+    {
+        rb.isKinematic = true; // Stop the character's movement
+        animator.SetTrigger("default");
     }
 
     /// <summary>
@@ -79,5 +90,15 @@ public class CharacterMovementController : MonoBehaviour
         }
 
         moveTweenX = transform.DOMoveX(xPos, 1f);
+    }
+
+    private void CheckFailCondition()
+    {
+        if (transform.position.y <= -7f)
+        {
+            Debug.Log("Game Over!"); // Log game over message
+            CancelInvoke(nameof(CheckFailCondition));
+            signalBus.Fire(new GameOverEvent()); // Fire game over event if the character falls
+        }
     }
 }

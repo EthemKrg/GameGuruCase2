@@ -9,6 +9,16 @@ public class InputController : MonoBehaviour
     private bool isInputEnabled = true;
     public bool IsInputEnabled => isInputEnabled;
 
+    private void OnEnable()
+    {
+        signalBus.Subscribe<GameOverEvent>(() => isInputEnabled = false);
+    }
+
+    private void OnDisable()
+    {
+        signalBus.TryUnsubscribe<GameOverEvent>(() => isInputEnabled = false);
+    }
+
     /// <summary>
     /// This method detects mouse clicks and touch inputs.
     /// </summary>

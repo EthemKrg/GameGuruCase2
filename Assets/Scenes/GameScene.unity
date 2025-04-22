@@ -2361,7 +2361,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bb357c3ff8fd0674e86122a7b8c8f9cf, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  speed: 3
+  speed: 2.5
   rb: {fileID: 604125045}
   animator: {fileID: 5062883109654775314}
   canMove: 0
@@ -3360,9 +3360,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d1a5a7fa60738064c94d8a543323fa47, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  platformSpeed: 3
+  platformSpeed: 2.5
+  minPlatformSpeed: 0.3
+  platformSpeedModifier: 0.1
   spawnXpos: 5
   platformSize: {x: 3, y: 0.6, z: 3}
+  nextPlatformPosition: {x: 0, y: 0, z: 0}
 --- !u!1 &980142094
 GameObject:
   m_ObjectHideFlags: 0

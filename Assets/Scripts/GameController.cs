@@ -5,6 +5,7 @@ using Zenject;
 public class GameController : MonoBehaviour
 {
     [Inject] private SignalBus signalBus;
+    [Inject] private PlatformSpawner platformSpawner;
 
     private bool isGameStarted = false;
 
@@ -20,14 +21,13 @@ public class GameController : MonoBehaviour
 
     private void TapEventFired()
     {
-        Debug.Log("Tap Event Fired");
         if (!isGameStarted)
         {
             Debug.Log("Game Started");
             isGameStarted = true;
             signalBus.Fire(new GameStartedEvent());
-
-            return;
         }
+
+        signalBus.Fire(new StopMovingPlatformEvent());
     }
 }

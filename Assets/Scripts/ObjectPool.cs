@@ -7,8 +7,8 @@ public class ObjectPool : MonoBehaviour
     public enum ObjectType
     {
         Platform,
-        Enemy,
-        Projectile
+        Coin,
+        Diamond
     }
 
     [System.Serializable]
@@ -24,6 +24,12 @@ public class ObjectPool : MonoBehaviour
 
     // Dictionary to hold multiple object pools for different object types
     private Dictionary<ObjectType, List<GameObject>> pools = new Dictionary<ObjectType, List<GameObject>>();
+
+    void Start()
+    {
+        InitializePool(ObjectType.Platform);
+    }
+
 
     /// <summary>
     /// Initializes a pool for a specific object type with a given size.

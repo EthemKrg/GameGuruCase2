@@ -16,4 +16,12 @@ namespace Injection
     public class GameSuccessEvent
     {
     }
+
+    public class PerfectPlacementEvent
+    {
+    }
+
+    public class NormalPlacementEvent
+    {
+    }
 }

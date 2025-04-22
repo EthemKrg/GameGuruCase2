@@ -1,3 +1,4 @@
+using DG.Tweening;
 using Injection;
 using UnityEngine;
 using Zenject;
@@ -15,6 +16,9 @@ public class CharacterMovementController : MonoBehaviour
     [SerializeField] private Animator animator;
 
     [SerializeField] private bool canMove = false;
+
+    private Tween moveTweenX; // Tween for moving the character
+
     public bool CanMove
     {
         get { return canMove; }
@@ -65,5 +69,15 @@ public class CharacterMovementController : MonoBehaviour
             // Stop horizontal movement but maintain the current Y-axis velocity
             rb.velocity = new Vector3(0, rb.velocity.y, 0);
         }
+    }
+
+    public void MoveToXPos(float xPos)
+    {
+        if(moveTweenX != null)
+        {
+            moveTweenX.Kill(); // Kill the previous tween if it exists
+        }
+
+        moveTweenX = transform.DOMoveX(xPos, 1f);
     }
 }

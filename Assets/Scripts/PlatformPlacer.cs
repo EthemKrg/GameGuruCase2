@@ -11,6 +11,7 @@ public class PlatformPlacer : MonoBehaviour
     [Inject] private SignalBus signalBus;
     [Inject] private PlatformSpawner platformSpawner;
     [Inject] private ObjectPool objectPool;
+    [Inject] private CharacterMovementController characterMovementController;
 
     [SerializeField] private float perfectPlacementTolerance = 0.1f; // Tolerance for determining perfect placement
 
@@ -136,5 +137,9 @@ public class PlatformPlacer : MonoBehaviour
         // Update the position of the current platform
         float newXPos = currentPlatform.transform.localPosition.x - Mathf.Sign(differenceX) * (excessWidth * 0.5f);
         currentPlatform.transform.localPosition = new Vector3(newXPos, currentPlatform.transform.localPosition.y, currentPlatform.transform.localPosition.z);
+
+
+        // Update the player's x position to match the new platform position
+        characterMovementController.MoveToXPos(newXPos);
     }
 }

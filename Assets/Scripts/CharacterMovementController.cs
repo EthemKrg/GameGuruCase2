@@ -2,11 +2,13 @@ using Injection;
 using UnityEngine;
 using Zenject;
 
+/// <summary>
+/// Controls the movement of the character, including forward movement and animations.
+/// </summary>
 public class CharacterMovementController : MonoBehaviour
 {
     [Inject] private SignalBus signalBus;
 
-    // Speed of the player movement
     public float speed = 5f;
 
     [SerializeField] private Rigidbody rb;
@@ -22,7 +24,7 @@ public class CharacterMovementController : MonoBehaviour
             if (!canMove)
             {
                 animator.SetTrigger("dance");
-                rb.velocity = Vector3.zero; // Stop movement when canMove is false
+                rb.velocity = Vector3.zero;
             }
             else
             {
@@ -33,19 +35,19 @@ public class CharacterMovementController : MonoBehaviour
 
     private void OnEnable()
     {
-        signalBus.Subscribe<GameStartedEvent>(() => CanMove = true);
-        signalBus.Subscribe<LevelInitializedEvent>(StartLevel);
+        signalBus.Subscribe<GameStartedEvent>(() => CanMove = true); // Start movement when the game starts
+        signalBus.Subscribe<LevelInitializedEvent>(StartLevel); // Initialize the level
     }
 
     private void OnDisable()
     {
-        signalBus.TryUnsubscribe<GameStartedEvent>(() => CanMove = false);
-        signalBus.TryUnsubscribe<LevelInitializedEvent>(StartLevel);
+        signalBus.TryUnsubscribe<GameStartedEvent>(() => CanMove = false); // Stop movement when the game ends
+        signalBus.TryUnsubscribe<LevelInitializedEvent>(StartLevel); // Unsubscribe from level initialization
     }
 
     private void StartLevel()
     {
-        CanMove = false; // Initialize canMove to false
+        CanMove = false; // Disable movement at the start of the level
     }
 
     /// <summary>
@@ -55,13 +57,13 @@ public class CharacterMovementController : MonoBehaviour
     {
         if (canMove)
         {
-            // Set the velocity to move the player in a straight direction
-            rb.velocity = transform.forward * speed;
+            // Maintain the current Y-axis velocity while moving forward
+            rb.velocity = new Vector3(transform.forward.x * speed, rb.velocity.y, transform.forward.z * speed);
         }
         else
         {
-            // Stop the player's movement
-            rb.velocity = Vector3.zero;
+            // Stop horizontal movement but maintain the current Y-axis velocity
+            rb.velocity = new Vector3(0, rb.velocity.y, 0);
         }
     }
 }

@@ -6,6 +6,9 @@ public class InputController : MonoBehaviour
 {
     [Inject] private SignalBus signalBus;   
 
+    private bool isInputEnabled = true;
+    public bool IsInputEnabled => isInputEnabled;
+
     /// <summary>
     /// This method detects mouse clicks and touch inputs.
     /// </summary>
@@ -33,6 +36,8 @@ public class InputController : MonoBehaviour
     /// </summary>
     private void HandleInput()
     {
+        if (!isInputEnabled) return;
+
         signalBus.Fire(new TapEvent());
     }
 }

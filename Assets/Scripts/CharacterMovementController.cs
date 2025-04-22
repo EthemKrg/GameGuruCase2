@@ -42,6 +42,7 @@ public class CharacterMovementController : MonoBehaviour
         signalBus.Subscribe<GameStartedEvent>(() => CanMove = true); // Start movement when the game starts
         signalBus.Subscribe<LevelInitializedEvent>(StartLevel); // Initialize the level
         signalBus.Subscribe<GameOverEvent>(GameOver); // Stop movement when game over
+        signalBus.Subscribe<GameSuccessEvent>(GameSuccess); // Trigger success animation
     }
 
     private void OnDisable()
@@ -49,6 +50,7 @@ public class CharacterMovementController : MonoBehaviour
         signalBus.TryUnsubscribe<GameStartedEvent>(() => CanMove = false); // Stop movement when the game ends
         signalBus.TryUnsubscribe<LevelInitializedEvent>(StartLevel); // Unsubscribe from level initialization
         signalBus.TryUnsubscribe<GameOverEvent>(GameOver); // Unsubscribe from game over event
+        signalBus.TryUnsubscribe<GameSuccessEvent>(GameSuccess); // Unsubscribe from success event
     }
 
     private void StartLevel()
@@ -57,6 +59,12 @@ public class CharacterMovementController : MonoBehaviour
 
         // Check fail condition every second
         InvokeRepeating(nameof(CheckFailCondition), 1f, 0.5f);
+    }
+
+    private void GameSuccess()
+    {
+        canMove = false; // Stop movement when the game is successful
+        animator.SetTrigger("dance");
     }
 
     private void GameOver()

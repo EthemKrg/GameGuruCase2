@@ -5,12 +5,16 @@ using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using Zenject;
 
-public class FailPanel : MonoBehaviour
+/// <summary>
+/// Handles the fail panel logic in the game.
+/// </summary>
+/// <remarks>
+/// This class is responsible for displaying the fail panel when the player fails and providing a restart button.
+/// </remarks>
+public class FailPanel : Panel
 {
     [Inject] private SignalBus signalBus;
-
-    [SerializeField] private CanvasGroup canvasGroup;
-    [SerializeField] private float fadeDuration = 0.5f;
+    [Inject] private PlatformSpawner platformSpawner;
 
     [SerializeField] private Button restartButton;
 
@@ -18,37 +22,35 @@ public class FailPanel : MonoBehaviour
     {
         signalBus.Subscribe<GameOverEvent>(FailTriggered);
 
-        SetDisabled();
+        // Use the inherited SetDisabled method to initialize the panel
         restartButton.onClick.AddListener(OnRestartButtonClicked);
     }
 
     private void OnDisable()
     {
         signalBus.Unsubscribe<GameOverEvent>(FailTriggered);
+
+        // Remove the listener to prevent duplicate calls
+        restartButton.onClick.RemoveListener(OnRestartButtonClicked);
     }
 
+    /// <summary>
+    /// Handles the restart button click event by reloading the current scene.
+    /// </summary>
     private void OnRestartButtonClicked()
     {
-        // Reload the current scene
+        // Kill all active DOTween animations
         DOTween.KillAll();
+
         Debug.Log("Restarting the game...");
         SceneManager.LoadScene(SceneManager.GetActiveScene().name);
     }
 
+    /// <summary>
+    /// Displays the fail panel when the player fails.
+    /// </summary>
     private void FailTriggered()
     {
-        canvasGroup.DOFade(1, fadeDuration)
-        .OnComplete(() =>
-        {
-            canvasGroup.interactable = true;
-            canvasGroup.blocksRaycasts = true;
-        });
-    }
-
-    private void SetDisabled()
-    {
-        canvasGroup.interactable = false;
-        canvasGroup.blocksRaycasts = false;
-        canvasGroup.alpha = 0;
+        base.SetEnabled(); // Call the inherited method to enable the panel
     }
 }

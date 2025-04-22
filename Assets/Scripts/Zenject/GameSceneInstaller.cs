@@ -23,6 +23,8 @@ namespace Injection
             Container.DeclareSignal<PerfectPlacementEvent>();
             Container.DeclareSignal<NormalPlacementEvent>();
             Container.DeclareSignal<StopMovingPlatformEvent>();
+            Container.DeclareSignal<LevelInitializedEvent>();
+
 
 
             //Bindings

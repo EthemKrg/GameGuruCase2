@@ -28,11 +28,15 @@ public class PlatformSpawner : MonoBehaviour
     private void OnEnable()
     {
         signalBus.Subscribe<LevelInitializedEvent>(StartLevel);
+        signalBus.Subscribe<PerfectPlacementEvent>(IncreasePlatformSpeedAndSpawnNew);
+        signalBus.Subscribe<NormalPlacementEvent>(ResetPlatformSpeedAndSpawnNew);
     }
 
     private void OnDisable()
     {
         signalBus.Unsubscribe<LevelInitializedEvent>(StartLevel);
+        signalBus.Unsubscribe<PerfectPlacementEvent>(IncreasePlatformSpeedAndSpawnNew);
+        signalBus.Unsubscribe<NormalPlacementEvent>(ResetPlatformSpeedAndSpawnNew);
     }
 
     private void StartLevel()
@@ -53,6 +57,8 @@ public class PlatformSpawner : MonoBehaviour
         currentPlatform.transform.localPosition = nextPlatformPosition;
 
         float targetXpos = nextPlatformPosition.x * -1f;
+
+        Debug.Log($"Moving platform from {nextPlatformPosition.x} to {targetXpos}");
         currentPlatform.transform.DOLocalMoveX(targetXpos, platformSpeed).SetLoops(-1, LoopType.Yoyo).SetEase(Ease.Linear);
 
         IncrementNextPosition();
@@ -73,7 +79,7 @@ public class PlatformSpawner : MonoBehaviour
     {
         spawnXpos = spawnXpos * -1;
 
-        nextPlatformPosition += new Vector3(spawnXpos, 0, platformSize.z);
+        nextPlatformPosition = new Vector3(spawnXpos, 0, nextPlatformPosition.z + platformSize.z);
     }
 
     public void ResetPlatformSpeedAndSpawnNew()

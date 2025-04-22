@@ -50,7 +50,7 @@ public class ObjectPool : MonoBehaviour
 
             for (int i = 0; i < pair.poolSize; i++)
             {
-                GameObject obj = Instantiate(pair.prefab);
+                GameObject obj = Instantiate(pair.prefab, transform);
                 obj.SetActive(false); // Deactivate the object initially
                 pools[type].Add(obj);
             }

@@ -19,6 +19,11 @@ public class GameController : MonoBehaviour
         signalBus.Unsubscribe<TapEvent>(TapEventFired);
     }
 
+    private void Start()
+    {
+        signalBus.Fire(new LevelInitializedEvent());
+    }
+
     private void TapEventFired()
     {
         if (!isGameStarted)

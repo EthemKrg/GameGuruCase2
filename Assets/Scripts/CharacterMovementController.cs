@@ -6,8 +6,9 @@ public class CharacterMovementController : MonoBehaviour
     public float speed = 5f;
 
     [SerializeField] private Rigidbody rb;
+    [SerializeField] private Animator animator;
 
-    private bool canMove = false;
+    [SerializeField] private bool canMove = false;
     public bool CanMove
     {
         get { return canMove; }
@@ -16,9 +17,19 @@ public class CharacterMovementController : MonoBehaviour
             canMove = value;
             if (!canMove)
             {
+                animator.SetTrigger("dance");
                 rb.velocity = Vector3.zero; // Stop movement when canMove is false
             }
+            else
+            {
+                animator.SetTrigger("run");
+            }
         }
+    }
+
+    private void Start()
+    {
+        CanMove = false; // Initialize canMove to false
     }
 
     /// <summary>

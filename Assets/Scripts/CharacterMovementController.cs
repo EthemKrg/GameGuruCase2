@@ -10,7 +10,10 @@ public class CharacterMovementController : MonoBehaviour
 {
     [Inject] private SignalBus signalBus;
 
-    public float speed = 5f;
+    private float baseSpeed; // The initial speed of the character
+    [SerializeField] private float speed = 5f;
+    [SerializeField] private float maxSpeed = 4f; // Minimum speed of the character
+    [SerializeField] private float speedModifier = 0.1f; // Speed reduction modifier for perfect placements
 
     [SerializeField] private Rigidbody rb;
     [SerializeField] private Animator animator;
@@ -43,6 +46,8 @@ public class CharacterMovementController : MonoBehaviour
         signalBus.Subscribe<LevelInitializedEvent>(StartLevel); // Initialize the level
         signalBus.Subscribe<GameOverEvent>(GameOver); // Stop movement when game over
         signalBus.Subscribe<GameSuccessEvent>(GameSuccess); // Trigger success animation
+        signalBus.Subscribe<PerfectPlacementEvent>(IncreaseSpeed);
+        signalBus.Subscribe<NormalPlacementEvent>(ResetSpeed);
     }
 
     private void OnDisable()
@@ -51,11 +56,15 @@ public class CharacterMovementController : MonoBehaviour
         signalBus.TryUnsubscribe<LevelInitializedEvent>(StartLevel); // Unsubscribe from level initialization
         signalBus.TryUnsubscribe<GameOverEvent>(GameOver); // Unsubscribe from game over event
         signalBus.TryUnsubscribe<GameSuccessEvent>(GameSuccess); // Unsubscribe from success event
+        signalBus.TryUnsubscribe<PerfectPlacementEvent>(IncreaseSpeed); // Unsubscribe from perfect placement event
+        signalBus.TryUnsubscribe<NormalPlacementEvent>(ResetSpeed); // Unsubscribe from normal placement event
     }
 
     private void StartLevel()
     {
         CanMove = false; // Disable movement at the start of the level
+
+        baseSpeed = speed; // Store the initial speed
 
         // Check fail condition every second
         InvokeRepeating(nameof(CheckFailCondition), 1f, 0.5f);
@@ -108,5 +117,17 @@ public class CharacterMovementController : MonoBehaviour
             CancelInvoke(nameof(CheckFailCondition));
             signalBus.Fire(new GameOverEvent()); // Fire game over event if the character falls
         }
+    }
+
+    private void IncreaseSpeed()
+    {
+        speed += speedModifier; // Decrease speed for perfect placement
+
+        speed = Mathf.Clamp(speed, baseSpeed, maxSpeed); // Ensure speed does not go below minimum
+    }
+
+    private void ResetSpeed()
+    {
+        speed = baseSpeed; // Reset speed to the initial value
     }
 }

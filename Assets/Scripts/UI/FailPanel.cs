@@ -14,7 +14,6 @@ using Zenject;
 public class FailPanel : Panel
 {
     [Inject] private SignalBus signalBus;
-    [Inject] private PlatformSpawner platformSpawner;
 
     [SerializeField] private Button restartButton;
 
@@ -23,6 +22,8 @@ public class FailPanel : Panel
         signalBus.Subscribe<GameOverEvent>(FailTriggered);
 
         // Use the inherited SetDisabled method to initialize the panel
+        SetDisabled();
+
         restartButton.onClick.AddListener(OnRestartButtonClicked);
     }
 

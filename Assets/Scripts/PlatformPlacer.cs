@@ -116,6 +116,9 @@ public class PlatformPlacer : MonoBehaviour
         excessPart.transform.localPosition = excessPartPosition;
         excessPart.transform.localScale = excessPartScale;
 
+        // Set the same material as the current platform
+        excessPart.GetComponent<MeshRenderer>().material = currentPlatform.GetComponent<MeshRenderer>().material;
+
         // Drop the excess part downwards with more realistic effects
         excessPart.transform.DOMoveY(-5f, 1f)
             .SetEase(Ease.InQuad) // Add acceleration for a more natural fall

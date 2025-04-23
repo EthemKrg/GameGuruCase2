@@ -12,6 +12,7 @@ namespace Injection
         [SerializeField] private PlatformPlacer platformPlacer;
         [SerializeField] private GameController gameController;
         [SerializeField] private FinishController finishController;
+        [SerializeField] private PlatformColor platformColor;
 
         public override void InstallBindings()
         {
@@ -36,6 +37,7 @@ namespace Injection
             Container.Bind<GameController>().FromInstance(gameController).AsSingle();
             Container.Bind<PlatformPlacer>().FromInstance(platformPlacer).AsSingle();
             Container.Bind<FinishController>().FromInstance(finishController).AsSingle();
+            Container.Bind<PlatformColor>().FromInstance(platformColor).AsSingle();
         }
     }
 }

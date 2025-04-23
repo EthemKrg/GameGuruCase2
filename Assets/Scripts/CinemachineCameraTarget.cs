@@ -29,8 +29,6 @@ public class CinemachineCameraTarget : MonoBehaviour
     {
         // Save the initial rotation of the camera target
         initialRotation = transform.rotation;
-
-        RotateAround();
     }
 
     /// <summary>

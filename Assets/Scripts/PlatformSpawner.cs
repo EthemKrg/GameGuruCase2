@@ -11,6 +11,7 @@ public class PlatformSpawner : MonoBehaviour
     [Inject] private SignalBus signalBus;
     [Inject] private ObjectPool objectPool;
     [Inject] private FinishController finishController;
+    [Inject] private PlatformColor platformColor;
 
     private float basePlatformSpeed; // The initial speed of the platform movement
     [SerializeField] private float platformSpeed = 3f; // Current speed of the platform movement
@@ -78,6 +79,8 @@ public class PlatformSpawner : MonoBehaviour
         currentPlatform.transform.localScale = previousPlatform.transform.localScale; // Match the scale of the previous platform
         currentPlatform.transform.localPosition = nextPlatformPosition;
 
+        currentPlatform.GetComponent<MeshRenderer>().material = platformColor.GetNextMaterial();
+
         float targetXpos = nextPlatformPosition.x * -1f;
         currentPlatform.transform.DOLocalMoveX(targetXpos, platformSpeed)
             .SetLoops(-1, LoopType.Yoyo)
@@ -100,8 +103,12 @@ public class PlatformSpawner : MonoBehaviour
         spawnCount--;
 
         currentPlatform = objectPool.GetObject(ObjectPool.ObjectType.Platform);
-        currentPlatform.transform.position = point;
-        currentPlatform.SetActive(true);
+        currentPlatform.transform.DOKill(); // Stop any ongoing animations on the platform
+        currentPlatform.transform.localEulerAngles = Vector3.zero; // Reset rotation
+        currentPlatform.transform.localScale = platformSize; // Match the scale of the previous platform
+        currentPlatform.transform.localPosition = point;
+
+        currentPlatform.GetComponent<MeshRenderer>().material = platformColor.GetNextMaterial();
 
         IncrementNextPosition();
 

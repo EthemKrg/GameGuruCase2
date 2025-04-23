@@ -17,12 +17,14 @@ public class AudioManager : MonoBehaviour
     {
         signalBus.Subscribe<PerfectPlacementEvent>(PlayPerfectPlacementSound);
         signalBus.Subscribe<NormalPlacementEvent>(PlayNormalPlacementSound);
+        signalBus.Subscribe<LevelInitializedEvent>(()=> perfectPlacementAudioSource.pitch = defaultPitch);
     }
 
     private void OnDisable()
     {
-        signalBus.Unsubscribe<PerfectPlacementEvent>(PlayPerfectPlacementSound);
-        signalBus.Unsubscribe<NormalPlacementEvent>(PlayNormalPlacementSound);
+        signalBus.TryUnsubscribe<PerfectPlacementEvent>(PlayPerfectPlacementSound);
+        signalBus.TryUnsubscribe<NormalPlacementEvent>(PlayNormalPlacementSound);
+        signalBus.TryUnsubscribe<LevelInitializedEvent>(() => perfectPlacementAudioSource.pitch = defaultPitch);
     }
 
     /// <summary>

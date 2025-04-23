@@ -10,8 +10,8 @@ public class CharacterMovementController : MonoBehaviour
 {
     [Inject] private SignalBus signalBus;
 
-    private float baseSpeed; // The initial speed of the character
-    [SerializeField] private float speed = 5f;
+    [SerializeField] private float baseSpeed; // The initial speed of the character
+    private float speed = 5f;
     [SerializeField] private float maxSpeed = 4f; // Minimum speed of the character
     [SerializeField] private float speedModifier = 0.1f; // Speed reduction modifier for perfect placements
 
@@ -36,6 +36,8 @@ public class CharacterMovementController : MonoBehaviour
             else
             {
                 animator.SetTrigger("run");
+                animator.transform.localRotation = Quaternion.Euler(0, 0, 0); // Reset rotation when starting to run
+                animator.transform.localPosition = new Vector3(0, -1, 0); // Reset position when starting to run
             }
         }
     }
@@ -64,7 +66,7 @@ public class CharacterMovementController : MonoBehaviour
     {
         CanMove = false; // Disable movement at the start of the level
 
-        baseSpeed = speed; // Store the initial speed
+        speed = baseSpeed; // Store the initial speed
 
         // Check fail condition every second
         InvokeRepeating(nameof(CheckFailCondition), 1f, 0.5f);

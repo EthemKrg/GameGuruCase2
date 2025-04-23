@@ -37,7 +37,9 @@ public class SuccessPanel : Panel
     /// </summary>
     private void OnNextLevelButtonClicked()
     {
-
+        SetDisabled(); // Call the inherited method to disable the panel
+        
+        signalBus.Fire(new LevelInitializedEvent());
     }
 
     /// <summary>

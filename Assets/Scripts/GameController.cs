@@ -12,11 +12,13 @@ public class GameController : MonoBehaviour
     private void OnEnable()
     {
         signalBus.Subscribe<TapEvent>(TapEventFired);
+        signalBus.Subscribe<LevelInitializedEvent>(()=> isGameStarted = false);
     }
 
     private void OnDisable()
     {
-        signalBus.Unsubscribe<TapEvent>(TapEventFired);
+        signalBus.TryUnsubscribe<TapEvent>(TapEventFired);
+        signalBus.TryUnsubscribe<LevelInitializedEvent>(() => isGameStarted = false);
     }
 
     private void Start()

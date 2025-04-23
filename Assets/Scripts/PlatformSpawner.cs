@@ -12,9 +12,10 @@ public class PlatformSpawner : MonoBehaviour
     [Inject] private ObjectPool objectPool;
     [Inject] private FinishController finishController;
     [Inject] private PlatformColor platformColor;
+    [Inject] private CharacterMovementController characterMovementController;
 
-    private float basePlatformSpeed; // The initial speed of the platform movement
-    [SerializeField] private float platformSpeed = 3f; // Current speed of the platform movement
+    [SerializeField] private float basePlatformSpeed; // The initial speed of the platform movement
+    private float platformSpeed = 3f; // Current speed of the platform movement
     [SerializeField] private float minPlatformSpeed = 0.4f; // Minimum speed of the platform movement
     [SerializeField] private float platformSpeedModifier = 0.1f; // Speed reduction modifier for perfect placements
 
@@ -53,8 +54,13 @@ public class PlatformSpawner : MonoBehaviour
     /// </summary>
     private void StartLevel()
     {
-        basePlatformSpeed = platformSpeed;
+        platformSpeed = basePlatformSpeed;
         spawnCount = finishController.PlatformDistanceToFinish; // Set the spawn count based on the distance to the finish line
+
+        nextPlatformPosition = characterMovementController.transform.position; // Set the next platform position to the player's position
+        nextPlatformPosition.y = 0;
+
+        finishController.SetFinishPosition(); // Set the finish line position
 
         previousPlatform = SpawnPlatformAtPoint(nextPlatformPosition);
         SpawnAndMovePlatform();

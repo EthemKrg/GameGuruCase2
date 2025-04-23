@@ -21,9 +21,15 @@ public class FinishController : MonoBehaviour
 
     private void Start()
     {
+        SetFinishPosition();
+    }
+
+    public void SetFinishPosition()
+    {
         float zSize = platformSpawner.PlatformSize.z;
-        transform.position = new Vector3(0, platformSpawner.NextPlatformPosition.y + 0.3f,
-            zSize * platformDistanceToFinish - 0.5f);
+
+        transform.position = new Vector3(0, platformSpawner.NextPlatformPosition.y + 0.34f,
+            platformSpawner.NextPlatformPosition.z + (zSize * platformDistanceToFinish - 0.5f));
     }
 
     private void OnTriggerEnter(Collider other)

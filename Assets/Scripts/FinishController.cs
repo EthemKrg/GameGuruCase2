@@ -22,7 +22,7 @@ public class FinishController : MonoBehaviour
     private void Start()
     {
         float zSize = platformSpawner.PlatformSize.z;
-        transform.position = new Vector3(0, platformSpawner.NextPlatformPosition.y,
+        transform.position = new Vector3(0, platformSpawner.NextPlatformPosition.y + 0.3f,
             zSize * platformDistanceToFinish - 0.5f);
     }
 
